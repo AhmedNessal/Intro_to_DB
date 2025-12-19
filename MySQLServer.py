@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+"""
+Script to create alx_book_store database in MySQL server
+"""
+
 import mysql.connector
-from mysql.connector import Error
-import getpass
 
 
 def create_database():
@@ -10,29 +13,31 @@ def create_database():
     connection = None
     
     try:
-        # Get MySQL credentials from user
-        username = input("Enter MySQL username (default: root): ") or "root"
-        password = getpass.getpass("Enter MySQL password: ")
-        
+        # Connect to MySQL server
         connection = mysql.connector.connect(
             host='localhost',
-            user=username,
-            password=password
+            user='root',          # Replace with your MySQL username
+            password='your_password'  # Replace with your MySQL password
         )
         
         if connection.is_connected():
+            # Create cursor object
             cursor = connection.cursor()
             
+            # Create database if it doesn't exist
             cursor.execute("CREATE DATABASE IF NOT EXISTS alx_book_store")
             
             print("Database 'alx_book_store' created successfully!")
             
+            # Close cursor
             cursor.close()
             
-    except Error as e:
+    except mysql.connector.Error as e:
+        # Handle connection errors
         print(f"Error while connecting to MySQL: {e}")
         
     finally:
+        # Close the database connection
         if connection is not None and connection.is_connected():
             connection.close()
 
